@@ -1,12 +1,13 @@
 import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { Certificate, CertificateSchema } from './schemas/certificate.schema';
+import { ConfigModule } from '@nestjs/config';
 
 /*
-TODO 
--> Criar instancia mongodb para salvar os registros dos certificados
 TODO
--> Pegar dados do banco na rota de GET
+-> Estilizar pdf e error handling
 */
 
 /*
@@ -21,7 +22,16 @@ TODO
  */
 
 @Module({
-  imports: [],
+  imports: [
+    ConfigModule.forRoot(),
+    MongooseModule.forRoot(process.env.MONGODB_KEY),
+    MongooseModule.forFeature([
+      {
+        name: Certificate.name,
+        schema: CertificateSchema,
+      },
+    ]),
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
